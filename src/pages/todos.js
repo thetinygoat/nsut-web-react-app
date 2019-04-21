@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import Container from '../components/container';
 
 const todos = () => {
@@ -50,7 +51,12 @@ const todos = () => {
 			>
 				Create
 			</Button>
-			{todos && todos.map(todo => <div key={todo._id}>{todo.content}</div>)}
+			{todos &&
+				todos.map(todo => (
+					<Card style={{ margin: '.3em 0', padding: '1em' }} key={todo._id}>
+						{todo.content}
+					</Card>
+				))}
 		</Container>
 	);
 };
