@@ -9,7 +9,6 @@ const signup = () => {
 	const [password, setPassword] = useState('');
 	const [loggedin, setloggedin] = useState(false);
 	const handleSubmit = async e => {
-		e.preventDefault();
 		const res = await axios.post('/user/new', {
 			email: email,
 			password: password
