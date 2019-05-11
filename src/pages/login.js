@@ -8,6 +8,8 @@ const login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loggedin, setloggedin] = useState(false);
+	const [error, setError] = useState({ isError: false, reason: '' });
+	const [invalidForm, setFormInvalidity] = useState(true);
 	const handleSubmit = async e => {
 		const res = await axios.post('/user/login', {
 			email: email,
@@ -16,6 +18,8 @@ const login = () => {
 		if (!res.data.error) {
 			localStorage.setItem('auth-token', res.data.token);
 			setloggedin(true);
+		} else {
+			setError({ isError: res.data.error, reason: res.data.reason });
 		}
 	};
 	useEffect(() => {
@@ -23,42 +27,51 @@ const login = () => {
 		if (token) {
 			setloggedin(true);
 		}
-	}, []);
+		if (email.trim(' ').length > 0 && password.trim(' ').length > 0) {
+			setFormInvalidity(false);
+		} else {
+			setFormInvalidity(true);
+		}
+	}, [email, password]);
 	return (
-		<Card
-			style={{
-				width: '50%',
-				margin: '1em auto',
-				padding: '1em',
-				display: 'flex',
-				flexDirection: 'column'
-			}}
-		>
-			<TextField
-				type="email"
-				label="Email"
-				style={{ margin: '1em' }}
-				onChange={e => setEmail(e.target.value)}
-			/>
-			<TextField
-				label="Password"
-				type="password"
-				style={{ margin: '1em' }}
-				onChange={e => setPassword(e.target.value)}
-			/>
-			<Button
-				variant="contained"
-				color="primary"
-				style={{ margin: '1em' }}
-				onClick={() => handleSubmit()}
+		<React.Fragment>
+			{error.isError && <div>{error.reason}</div>}
+			<Card
+				style={{
+					width: '50%',
+					margin: '1em auto',
+					padding: '1em',
+					display: 'flex',
+					flexDirection: 'column'
+				}}
 			>
-				Login
-			</Button>
-			<p>
-				<Link to="/signup">Sign Up</Link> instead
-			</p>
-			{loggedin && <Redirect to="/todos" />}
-		</Card>
+				<TextField
+					type="email"
+					label="Email"
+					style={{ margin: '1em' }}
+					onChange={e => setEmail(e.target.value)}
+				/>
+				<TextField
+					label="Password"
+					type="password"
+					style={{ margin: '1em' }}
+					onChange={e => setPassword(e.target.value)}
+				/>
+				<Button
+					variant="contained"
+					disabled={invalidForm}
+					color="primary"
+					style={{ margin: '1em' }}
+					onClick={() => handleSubmit()}
+				>
+					Login
+				</Button>
+				<p>
+					<Link to="/signup">Sign Up</Link> instead
+				</p>
+				{loggedin && <Redirect to="/todos" />}
+			</Card>
+		</React.Fragment>
 	);
 };
 
