@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { Link, Redirect } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
 import Container from '../components/container';
 const signup = () => {
 	const [email, setEmail] = useState('');
@@ -17,7 +18,6 @@ const signup = () => {
 			email: email,
 			password: password
 		});
-		console.log(res.data);
 		// error handler
 		if (!res.data.error) {
 			localStorage.setItem('auth-token', res.data.token);
@@ -40,8 +40,14 @@ const signup = () => {
 	}, [email, password]);
 	return (
 		<Container>
+			<h1 style={{ textAlign: 'center' }}>SIGN UP</h1>
 			{/* display error message */}
-			{error.isError && <div>{error.reason}</div>}
+			<Snackbar
+				open={error.isError}
+				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+				message={<span>{error.reason}</span>}
+				autoHideDuration={6000}
+			/>
 			<Card
 				style={{
 					padding: '1em',
