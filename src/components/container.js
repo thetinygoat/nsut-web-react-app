@@ -4,6 +4,9 @@ const Container = styled.div`
 	flex-direction: column;
 	width: 80%;
 	margin: 1em auto;
+	@media (max-width: 730px) {
+		width: 95%;
+	}
 `;
 
 export default Container;

@@ -3,25 +3,33 @@ import axios from '../axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link, Redirect } from 'react-router-dom';
 const login = () => {
+	// state for email password login status error and form state
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loggedin, setloggedin] = useState(false);
 	const [error, setError] = useState({ isError: false, reason: '' });
+	const [loading, setLoading] = useState(false);
 	const [invalidForm, setFormInvalidity] = useState(true);
+	// submit handler
 	const handleSubmit = async e => {
+		setLoading(true);
 		const res = await axios.post('/user/login', {
 			email: email,
 			password: password
 		});
+		// error handler
 		if (!res.data.error) {
 			localStorage.setItem('auth-token', res.data.token);
 			setloggedin(true);
 		} else {
+			setLoading(false);
 			setError({ isError: res.data.error, reason: res.data.reason });
 		}
 	};
+	// use effect hook
 	useEffect(() => {
 		const token = localStorage.getItem('auth-token');
 		if (token) {
@@ -64,7 +72,7 @@ const login = () => {
 					style={{ margin: '1em' }}
 					onClick={() => handleSubmit()}
 				>
-					Login
+					{loading ? <CircularProgress color="secondary" /> : 'Login'}
 				</Button>
 				<p>
 					<Link to="/signup">Sign Up</Link> instead

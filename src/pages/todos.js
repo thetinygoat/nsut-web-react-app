@@ -4,6 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Container from '../components/container';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditButton from '@material-ui/icons/Edit';
+import TodoContainer from '../components/todoContainer';
 import { Redirect } from 'react-router-dom';
 
 const todos = () => {
@@ -39,6 +43,19 @@ const todos = () => {
 			alert('Todo content cannot be empty!');
 		}
 	};
+	const handleTodoDeletion = async id => {
+		let token = await localStorage.getItem('auth-token');
+		const res = await axios.delete(`/todo/${id}`, {
+			headers: { 'x-access-token': token }
+		});
+
+		if (res.data) {
+			const newTodos = todos.filter(todo => {
+				return todo._id !== id;
+			});
+			setTodos(newTodos);
+		}
+	};
 	return (
 		<Container>
 			<h1 style={{ textAlign: 'center' }}>TODO LIST</h1>
@@ -60,7 +77,17 @@ const todos = () => {
 			{todos &&
 				todos.map(todo => (
 					<Card style={{ margin: '.3em 0', padding: '1em' }} key={todo._id}>
-						{todo.content}
+						<TodoContainer>
+							<div>{todo.content}</div>
+							<div>
+								<IconButton onClick={() => handleTodoDeletion(todo._id)}>
+									<DeleteIcon />
+								</IconButton>
+								<IconButton>
+									<EditButton />
+								</IconButton>
+							</div>
+						</TodoContainer>
 					</Card>
 				))}
 			{!isLoggedin && <Redirect to="/" />}
