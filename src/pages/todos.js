@@ -4,15 +4,20 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Container from '../components/container';
+import { Redirect } from 'react-router-dom';
 
 const todos = () => {
+	const [isLoggedin, setLoggedin] = useState(true);
 	const fetchData = async () => {
 		let token = await localStorage.getItem('auth-token');
+		if (!token) {
+			setLoggedin(false);
+			return;
+		}
 		const response = await axios.get('/user', {
 			headers: { 'x-access-token': token }
 		});
 		setTodos(response.data.todos);
-		console.log(response.data);
 	};
 	const [todos, setTodos] = useState([]);
 	useEffect(() => {
@@ -36,6 +41,7 @@ const todos = () => {
 	};
 	return (
 		<Container>
+			<h1 style={{ textAlign: 'center' }}>TODO LIST</h1>
 			<TextField
 				label="Create new todo"
 				style={{ margin: '1em' }}
@@ -57,6 +63,7 @@ const todos = () => {
 						{todo.content}
 					</Card>
 				))}
+			{!isLoggedin && <Redirect to="/" />}
 		</Container>
 	);
 };
