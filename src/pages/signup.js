@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { Link, Redirect } from 'react-router-dom';
+import Container from '../components/container';
 const signup = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -38,13 +39,11 @@ const signup = () => {
 		}
 	}, [email, password]);
 	return (
-		<React.Fragment>
+		<Container>
 			{/* display error message */}
 			{error.isError && <div>{error.reason}</div>}
 			<Card
 				style={{
-					width: '50%',
-					margin: '1em auto',
 					padding: '1em',
 					display: 'flex',
 					flexDirection: 'column'
@@ -73,12 +72,13 @@ const signup = () => {
 				>
 					Sign up
 				</Button>
-				<p>
-					<Link to="/">Login</Link> instead
-				</p>
+				<p style={{ textAlign: 'center' }}>OR</p>
+				<Button component={Link} to="/" color="secondary">
+					Login
+				</Button>
 				{loggedin && <Redirect to="/todos" />}
 			</Card>
-		</React.Fragment>
+		</Container>
 	);
 };
 

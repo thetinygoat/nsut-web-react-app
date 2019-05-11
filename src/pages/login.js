@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link, Redirect } from 'react-router-dom';
+import Container from '../components/container';
 const login = () => {
 	// state for email password login status error and form state
 	const [email, setEmail] = useState('');
@@ -42,12 +43,11 @@ const login = () => {
 		}
 	}, [email, password]);
 	return (
-		<React.Fragment>
+		<Container>
 			{error.isError && <div>{error.reason}</div>}
 			<Card
 				style={{
-					width: '50%',
-					margin: '1em auto',
+					// margin: '1em auto',
 					padding: '1em',
 					display: 'flex',
 					flexDirection: 'column'
@@ -74,12 +74,13 @@ const login = () => {
 				>
 					{loading ? <CircularProgress color="secondary" /> : 'Login'}
 				</Button>
-				<p>
-					<Link to="/signup">Sign Up</Link> instead
-				</p>
+				<p style={{ textAlign: 'center' }}>OR</p>
+				<Button component={Link} to="/signup" color="secondary">
+					Sign up
+				</Button>
 				{loggedin && <Redirect to="/todos" />}
 			</Card>
-		</React.Fragment>
+		</Container>
 	);
 };
 
